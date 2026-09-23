@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Memory Match - An interactive memory card matching game featuring Pokémon, Animals, Food, Programming, and Space themes with 3D card flips.">
+  <title>Memory Match — Game Arena</title>
+
+  <!-- External Stylesheets (Zero Inline CSS) -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/game.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- =========================================================================
+       App Header & Navigation
+       ========================================================================= -->
+  <header class="app-header">
+    <div class="container navbar">
+      <a href="index.html" class="nav-brand" aria-label="Memory Match Home">
+        <span class="nav-brand__icon" aria-hidden="true">🃏</span>
+        <span>Memory <span class="nav-brand__accent">Match</span></span>
+      </a>
+
+      <nav class="nav-menu" aria-label="Main Navigation">
+        <a href="index.html" class="nav-link active">🎮 Game</a>
+        <a href="dashboard.html" class="nav-link">📊 Dashboard</a>
+        <a href="settings.html" class="nav-link">⚙️ Settings</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="themeToggleBtn" class="btn btn--outline btn--icon" type="button" aria-label="Toggle theme">
+          🌙
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       Main Content Area
+       ========================================================================= -->
+  <main class="main-content container">
+
+    <!-- Cookie-based Player Profile Greeting -->
+    <section class="game-welcome-banner" aria-label="Player Greeting">
+      <div class="welcome-text">
+        <span>👋 Welcome back, <span class="welcome-user-highlight js-player-name">Player</span>!</span>
+      </div>
+      <div class="welcome-last-visit js-last-visit">
+        Last active: Recently
+      </div>
+    </section>
+
+    <!-- Game HUD (Heads-Up Display) -->
+    <section class="game-hud" aria-label="Game Statistics">
+      <div class="hud-stat-card">
+        <span class="hud-stat-label">🎯 Moves</span>
+        <span id="movesCount" class="hud-stat-value">0</span>
+      </div>
+      <div class="hud-stat-card">
+        <span class="hud-stat-label">⏱️ Time</span>
+        <span id="timeElapsed" class="hud-stat-value hud-stat-value--time">00:00</span>
+      </div>
+      <div class="hud-stat-card">
+        <span class="hud-stat-label">✨ Matches</span>
+        <span id="matchesCount" class="hud-stat-value">0 / 8</span>
+      </div>
+      <div class="hud-stat-card">
+        <span class="hud-stat-label">🏆 Score</span>
+        <span id="currentScore" class="hud-stat-value hud-stat-value--score">0</span>
+      </div>
+    </section>
+
+    <!-- Game Control Toolbar -->
+    <section class="game-controls" aria-label="Game Controls">
+      <div class="control-selectors">
+        <div class="control-group">
+          <label for="themeSelect" class="control-label">Card Theme:</label>
+          <select id="themeSelect" class="control-select">
+            <optgroup label="Default Themes">
+              <option value="pokemon" selected>⚡ Pokémon (Featured)</option>
+              <option value="animals">🐾 Animals</option>
+              <option value="food">🍕 Food & Treats</option>
+              <option value="programming">💻 Programming</option>
+              <option value="space">🚀 Space Explorer</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="difficultySelect" class="control-label">Difficulty:</label>
+          <select id="difficultySelect" class="control-select">
+            <option value="easy">Easy (4 × 4 — 8 Pairs)</option>
+            <option value="medium">Medium (5 × 4 — 10 Pairs)</option>
+            <option value="hard">Hard (6 × 6 — 18 Pairs)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="control-buttons">
+        <button id="pauseBtn" class="btn btn--outline" type="button">
+          ⏸️ Pause
+        </button>
+        <button id="restartBtn" class="btn btn--outline" type="button">
+          🔄 Restart
+        </button>
+        <button id="newGameBtn" class="btn btn--primary" type="button">
+          ✨ New Game
+        </button>
+      </div>
+    </section>
+
+    <!-- Game Arena (Dynamically rendered by JavaScript) -->
+    <section class="game-arena" aria-label="Card Matching Arena">
+      <div id="cardBoard" class="card-board grid--easy" role="region" aria-label="Card Grid">
+        <!-- Card buttons dynamically injected by game.js -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================================
+       Pause Modal Dialog (Controlled via .modal--active)
+       ========================================================================= -->
+  <div id="pauseModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="pauseModalTitle">
+    <div class="modal-dialog">
+      <header class="modal__header">
+        <h2 id="pauseModalTitle" class="modal__title">⏸️ Game Paused</h2>
+      </header>
+      <div class="modal__body text-center">
+        <p class="text-muted">Take a breather! Your cards and game progress are safe.</p>
+      </div>
+      <footer class="modal__footer">
+        <a href="dashboard.html" class="btn btn--outline">📊 View Dashboard</a>
+        <button id="modalRestartBtn" class="btn btn--danger-outline" type="button">🔄 Restart Game</button>
+        <button id="resumeBtn" class="btn btn--primary" type="button">▶️ Resume Game</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Victory / Win Modal Dialog (Controlled via .modal--active)
+       ========================================================================= -->
+  <div id="winModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="winModalTitle">
+    <div class="modal-dialog">
+      <header class="modal__header">
+        <h2 id="winModalTitle" class="modal__title">🎉 Victory Achieved!</h2>
+      </header>
+      <div class="modal__body text-center">
+        <div class="win-celebration-icon" aria-hidden="true">🏆</div>
+        <h3>Magnificent Performance!</h3>
+        <p class="text-muted">You matched all card pairs! Your game stats have been stored in IndexedDB.</p>
+
+        <div class="win-stats-grid">
+          <div class="win-stat-box">
+            <span class="win-stat-box__label">Final Score</span>
+            <div id="winScore" class="win-stat-box__val text-primary">0</div>
+          </div>
+          <div class="win-stat-box">
+            <span class="win-stat-box__label">Time Elapsed</span>
+            <div id="winTime" class="win-stat-box__val">00:00</div>
+          </div>
+          <div class="win-stat-box">
+            <span class="win-stat-box__label">Total Moves</span>
+            <div id="winMoves" class="win-stat-box__val">0</div>
+          </div>
+          <div class="win-stat-box">
+            <span class="win-stat-box__label">Accuracy</span>
+            <div id="winAccuracy" class="win-stat-box__val text-success">100%</div>
+          </div>
+        </div>
+      </div>
+      <footer class="modal__footer">
+        <a href="dashboard.html" class="btn btn--outline">📊 Open Dashboard</a>
+        <button id="playAgainBtn" class="btn btn--primary" type="button">🔄 Play Again</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       App Footer
+       ========================================================================= -->
+  <footer class="app-footer">
+    <div class="container footer-content">
+      <p>© 2026 Memory Match — Pure Vanilla HTML5, CSS3 & JavaScript College Project.</p>
+      <p>Powered by <span class="text-primary font-bold">IndexedDB</span> & Web Storage</p>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       JavaScript Modules (Strictly External - Zero Inline Scripts)
+       ========================================================================= -->
+  <script src="js/utils.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/indexedDB.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/game.js"></script>
+
+</body>
+</html>

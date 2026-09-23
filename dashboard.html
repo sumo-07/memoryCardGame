@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Memory Match Dashboard - Performance analytics, game history, and custom card set management.">
+  <title>Memory Match — Dashboard & Statistics</title>
+
+  <!-- External Stylesheets (Zero Inline CSS) -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- =========================================================================
+       App Header & Navigation
+       ========================================================================= -->
+  <header class="app-header">
+    <div class="container navbar">
+      <a href="index.html" class="nav-brand" aria-label="Memory Match Home">
+        <span class="nav-brand__icon" aria-hidden="true">🃏</span>
+        <span>Memory <span class="nav-brand__accent">Match</span></span>
+      </a>
+
+      <nav class="nav-menu" aria-label="Main Navigation">
+        <a href="index.html" class="nav-link">🎮 Game</a>
+        <a href="dashboard.html" class="nav-link active">📊 Dashboard</a>
+        <a href="settings.html" class="nav-link">⚙️ Settings</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="themeToggleBtn" class="btn btn--outline btn--icon" type="button" aria-label="Toggle theme">
+          🌙
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       Main Content Area
+       ========================================================================= -->
+  <main class="main-content container">
+
+    <!-- Header & Welcome -->
+    <section class="game-welcome-banner" aria-label="Dashboard Overview">
+      <div class="welcome-text">
+        <span>📊 Player Dashboard for <span class="welcome-user-highlight js-player-name">Player</span></span>
+      </div>
+      <div class="welcome-last-visit js-last-visit">
+        Last active: Recently
+      </div>
+    </section>
+
+    <!-- 1. Statistics Overview Grid (6 Core Metrics) -->
+    <section class="dashboard-grid" aria-label="Player Statistics Cards">
+      <div class="stat-metric-card">
+        <div class="stat-metric-card__icon" aria-hidden="true">🎮</div>
+        <div class="stat-metric-card__content">
+          <div class="stat-metric-card__label">Games Played</div>
+          <div id="statGamesPlayed" class="stat-metric-card__value">0</div>
+        </div>
+      </div>
+
+      <div class="stat-metric-card">
+        <div class="stat-metric-card__icon" aria-hidden="true">🏆</div>
+        <div class="stat-metric-card__content">
+          <div class="stat-metric-card__label">Games Won</div>
+          <div id="statGamesWon" class="stat-metric-card__value text-success">0</div>
+        </div>
+      </div>
+
+      <div class="stat-metric-card">
+        <div class="stat-metric-card__icon" aria-hidden="true">⚡</div>
+        <div class="stat-metric-card__content">
+          <div class="stat-metric-card__label">Best Score</div>
+          <div id="statBestScore" class="stat-metric-card__value text-primary">0</div>
+        </div>
+      </div>
+
+      <div class="stat-metric-card">
+        <div class="stat-metric-card__icon" aria-hidden="true">⏱️</div>
+        <div class="stat-metric-card__content">
+          <div class="stat-metric-card__label">Best Time</div>
+          <div id="statBestTime" class="stat-metric-card__value">00:00</div>
+        </div>
+      </div>
+
+      <div class="stat-metric-card">
+        <div class="stat-metric-card__icon" aria-hidden="true">🎯</div>
+        <div class="stat-metric-card__content">
+          <div class="stat-metric-card__label">Total Moves Made</div>
+          <div id="statTotalMoves" class="stat-metric-card__value">0</div>
+        </div>
+      </div>
+
+      <div class="stat-metric-card">
+        <div class="stat-metric-card__icon" aria-hidden="true">📈</div>
+        <div class="stat-metric-card__content">
+          <div class="stat-metric-card__label">Average Score</div>
+          <div id="statAverageScore" class="stat-metric-card__value">0</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Pure CSS Visual Charts (No External JS Chart Libraries) -->
+    <section class="visual-charts-section" aria-label="Visual Analytics Charts">
+      <!-- Win Rate & Accuracy Progress Bars -->
+      <div class="chart-card">
+        <div class="chart-card__header">
+          <h2 class="chart-card__title">🎯 Accuracy & Win Ratio</h2>
+          <span id="winRateBadge" class="badge badge--success">100% Rate</span>
+        </div>
+
+        <div class="chart-card__body">
+          <div class="css-legend-row">
+            <span>Overall Matching Accuracy</span>
+            <span id="accuracyPctLabel" class="font-bold">0%</span>
+          </div>
+          <div class="css-progress-track">
+            <div id="accuracyProgressBar" class="css-progress-bar w-pct-0" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+
+          <div class="css-legend-row">
+            <span>Games Completion Rate</span>
+            <span id="completionPctLabel" class="font-bold">0%</span>
+          </div>
+          <div class="css-progress-track">
+            <div id="completionProgressBar" class="css-progress-bar css-progress-bar--success w-pct-0" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Difficulty Distribution Segmented Bar -->
+      <div class="chart-card">
+        <div class="chart-card__header">
+          <h2 class="chart-card__title">⚖️ Difficulty Distribution</h2>
+          <span class="badge badge--primary">Play Distribution</span>
+        </div>
+
+        <div class="chart-card__body">
+          <div id="difficultySegmentedBar" class="css-segmented-bar" aria-label="Difficulty Breakdown">
+            <div id="segEasy" class="seg-easy w-pct-35" title="Easy"></div>
+            <div id="segMedium" class="seg-medium w-pct-35" title="Medium"></div>
+            <div id="segHard" class="seg-hard w-pct-30" title="Hard"></div>
+          </div>
+
+          <div class="css-segmented-legend">
+            <div class="legend-item">
+              <span class="legend-color-dot seg-easy"></span>
+              <span>Easy: <strong id="easyCountLabel">0</strong></span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color-dot seg-medium"></span>
+              <span>Medium: <strong id="mediumCountLabel">0</strong></span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color-dot seg-hard"></span>
+              <span>Hard: <strong id="hardCountLabel">0</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Custom Card Set Manager (Full CRUD Implementation) -->
+    <section class="card-sets-section" aria-label="Custom Card Sets Manager">
+      <div class="panel">
+        <div class="panel__header">
+          <div>
+            <h2 class="panel__title">🎨 Custom Card Sets (CRUD Manager)</h2>
+            <p class="text-muted">Create, edit, delete, and play your own themed memory cards stored in IndexedDB.</p>
+          </div>
+          <button id="openCreateSetModalBtn" class="btn btn--primary" type="button">
+            ➕ Create Card Set
+          </button>
+        </div>
+
+        <!-- Custom Card Sets Grid (Dynamically populated by dashboard.js) -->
+        <div id="customSetsGrid" class="card-sets-grid" role="region" aria-label="Saved Card Sets">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Game History Table (IndexedDB Records) -->
+    <section class="history-section" aria-label="Match History Records">
+      <div class="panel">
+        <div class="panel__header">
+          <div>
+            <h2 class="panel__title">📜 Match History Logs</h2>
+            <p class="text-muted">Chronological game results retrieved from IndexedDB.</p>
+          </div>
+          <button id="clearHistoryBtn" class="btn btn--outline btn--sm" type="button">
+            🗑️ Clear History
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table" aria-label="Game History Table">
+            <thead>
+              <tr>
+                <th scope="col">Date & Time</th>
+                <th scope="col">Difficulty</th>
+                <th scope="col">Theme</th>
+                <th scope="col">Moves</th>
+                <th scope="col">Time</th>
+                <th scope="col">Accuracy</th>
+                <th scope="col">Score</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody">
+              <!-- Dynamically populated by dashboard.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================================
+       Modal: Create / Edit Custom Card Set (Form Validation & CRUD)
+       ========================================================================= -->
+  <div id="cardSetModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="cardSetModalTitle">
+    <div class="modal-dialog modal-dialog--lg">
+      <header class="modal__header">
+        <h2 id="cardSetModalTitle" class="modal__title">➕ Create Card Set</h2>
+        <button id="closeCardSetModalBtn" class="modal__close" type="button" aria-label="Close modal">✕</button>
+      </header>
+
+      <form id="cardSetForm" novalidate>
+        <div class="modal__body">
+          <input type="hidden" id="editCardSetId" value="">
+
+          <div class="form-group" id="groupSetName">
+            <label for="cardSetNameInput" class="form-label">
+              <span>Card Set Name <strong class="text-danger">*</strong></span>
+              <span class="form-helper">e.g. Legendary Pokémon, Tech Icons</span>
+            </label>
+            <input type="text" id="cardSetNameInput" class="form-input" placeholder="Enter set name (e.g. Pokémon Masters)" maxlength="30" required>
+            <div class="form-error" id="errorSetName">Please provide a valid card set name (minimum 3 characters).</div>
+          </div>
+
+          <div class="form-group" id="groupCardItems">
+            <div class="form-label">
+              <span>Card Items & Emojis <strong class="text-danger">*</strong></span>
+              <span class="form-helper">At least 8 pairs required (up to 18)</span>
+            </div>
+
+            <!-- Dynamic Input Slots Container -->
+            <div id="dynamicCardInputs" class="dynamic-cards-list">
+              <!-- Dynamically populated with input slots -->
+            </div>
+            <div class="form-error" id="errorCardItems">At least 8 unique, non-empty cards are required to play a 4x4 game.</div>
+          </div>
+
+          <div class="flex-center">
+            <button id="addCardSlotBtn" class="btn btn--outline btn--sm" type="button">
+              ➕ Add Another Card Slot
+            </button>
+          </div>
+        </div>
+
+        <footer class="modal__footer">
+          <button id="cancelCardSetModalBtn" class="btn btn--outline" type="button">Cancel</button>
+          <button id="saveCardSetSubmitBtn" class="btn btn--primary" type="submit">💾 Save Card Set</button>
+        </footer>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Modal: Delete Confirmation Dialog
+       ========================================================================= -->
+  <div id="deleteConfirmModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+    <div class="modal-dialog">
+      <header class="modal__header">
+        <h2 id="deleteModalTitle" class="modal__title text-danger">⚠️ Confirm Deletion</h2>
+      </header>
+      <div class="modal__body">
+        <p>Are you sure you want to permanently delete <strong id="deleteTargetName">this card set</strong>?</p>
+        <p class="text-muted">This action will remove the set from IndexedDB and cannot be undone.</p>
+      </div>
+      <footer class="modal__footer">
+        <button id="cancelDeleteBtn" class="btn btn--outline" type="button">Cancel</button>
+        <button id="confirmDeleteBtn" class="btn btn--danger" type="button">Delete Set</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       App Footer
+       ========================================================================= -->
+  <footer class="app-footer">
+    <div class="container footer-content">
+      <p>© 2026 Memory Match — Pure Vanilla HTML5, CSS3 & JavaScript College Project.</p>
+      <p>Powered by <span class="text-primary font-bold">IndexedDB</span> & Web Storage</p>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       JavaScript Modules (Strictly External - Zero Inline Scripts)
+       ========================================================================= -->
+  <script src="js/utils.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/indexedDB.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/dashboard.js"></script>
+
+</body>
+</html>

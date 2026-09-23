@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Memory Match Settings - Customize player name, audio effects, animations, themes, and game preferences.">
+  <title>Memory Match — Preferences & Settings</title>
+
+  <!-- External Stylesheets (Zero Inline CSS) -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/settings.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- =========================================================================
+       App Header & Navigation
+       ========================================================================= -->
+  <header class="app-header">
+    <div class="container navbar">
+      <a href="index.html" class="nav-brand" aria-label="Memory Match Home">
+        <span class="nav-brand__icon" aria-hidden="true">🃏</span>
+        <span>Memory <span class="nav-brand__accent">Match</span></span>
+      </a>
+
+      <nav class="nav-menu" aria-label="Main Navigation">
+        <a href="index.html" class="nav-link">🎮 Game</a>
+        <a href="dashboard.html" class="nav-link">📊 Dashboard</a>
+        <a href="settings.html" class="nav-link active">⚙️ Settings</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="themeToggleBtn" class="btn btn--outline btn--icon" type="button" aria-label="Toggle theme">
+          🌙
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       Main Content Area
+       ========================================================================= -->
+  <main class="main-content container">
+
+    <!-- Header & Welcome -->
+    <section class="game-welcome-banner" aria-label="Settings Overview">
+      <div class="welcome-text">
+        <span>⚙️ Player Preferences for <span class="welcome-user-highlight js-player-name">Player</span></span>
+      </div>
+      <div class="welcome-last-visit js-last-visit">
+        Last active: Recently
+      </div>
+    </section>
+
+    <div class="settings-grid">
+      <!-- 1. Player Profile Section (Stored in Cookies) -->
+      <section class="settings-section" aria-label="Player Identity Settings">
+        <header class="settings-section__header">
+          <h2 class="settings-section__title">👤 Player Identity</h2>
+          <p class="settings-section__subtitle">Stored securely inside browser cookies with last-visit timestamps.</p>
+        </header>
+
+        <form id="profileForm" novalidate>
+          <div class="form-group" id="groupPlayerName">
+            <label for="playerNameInput" class="form-label">
+              <span>Player Name / Trainer Alias</span>
+              <span class="badge badge--primary">Cookie Stored</span>
+            </label>
+            <input type="text" id="playerNameInput" class="form-input" placeholder="Enter your player name" maxlength="20" required>
+            <div class="form-error" id="errorPlayerName">Player name must be between 2 and 20 characters.</div>
+            <p class="form-helper">This name is read via JavaScript cookies and displayed across your game arena.</p>
+          </div>
+
+          <div class="settings-actions-bar">
+            <span></span>
+            <button id="saveProfileBtn" class="btn btn--primary" type="submit">
+              💾 Save Player Name
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- 2. Gameplay & Visual Preferences (Stored in localStorage) -->
+      <section class="settings-section" aria-label="Gameplay Settings">
+        <header class="settings-section__header">
+          <h2 class="settings-section__title">🎮 Game Preferences</h2>
+          <p class="settings-section__subtitle">Persisted across sessions via HTML5 localStorage.</p>
+        </header>
+
+        <form id="preferencesForm">
+          <!-- Default Difficulty -->
+          <div class="setting-row">
+            <div class="setting-row__info">
+              <label for="defaultDifficultySelect" class="setting-row__label">Default Difficulty</label>
+              <p class="setting-row__desc">The difficulty grid automatically loaded when starting a new game.</p>
+            </div>
+            <select id="defaultDifficultySelect" class="form-select">
+              <option value="easy">Easy (4 × 4 — 8 Pairs)</option>
+              <option value="medium">Medium (5 × 4 — 10 Pairs)</option>
+              <option value="hard">Hard (6 × 6 — 18 Pairs)</option>
+            </select>
+          </div>
+
+          <!-- Default Card Theme -->
+          <div class="setting-row">
+            <div class="setting-row__info">
+              <label for="defaultThemeSelect" class="setting-row__label">Preferred Theme</label>
+              <p class="setting-row__desc">Card deck imagery and theme icons applied by default.</p>
+            </div>
+            <select id="defaultThemeSelect" class="form-select">
+              <option value="pokemon">⚡ Pokémon (Featured)</option>
+              <option value="animals">🐾 Animals</option>
+              <option value="food">🍕 Food & Treats</option>
+              <option value="programming">💻 Programming</option>
+              <option value="space">🚀 Space Explorer</option>
+            </select>
+          </div>
+
+          <!-- Color Mode Switcher -->
+          <div class="setting-row">
+            <div class="setting-row__info">
+              <div class="setting-row__label">Appearance Theme</div>
+              <p class="setting-row__desc">Toggle between crisp Light Mode and high-contrast Dark Mode.</p>
+            </div>
+            <div class="theme-options-grid">
+              <div id="themeCardLight" class="theme-card-option" role="button" tabindex="0" aria-label="Select Light Theme">
+                <div class="theme-card-preview preview-light">☀️</div>
+                <div class="theme-card-title">Light Theme</div>
+              </div>
+              <div id="themeCardDark" class="theme-card-option is-active" role="button" tabindex="0" aria-label="Select Dark Theme">
+                <div class="theme-card-preview preview-dark">🌙</div>
+                <div class="theme-card-title">Dark Theme</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sound Effects Toggle -->
+          <div class="setting-row">
+            <div class="setting-row__info">
+              <div class="setting-row__label">Web Audio Sound Effects</div>
+              <p class="setting-row__desc">Play synthesizer-generated audio cues on flip, match, and victory.</p>
+            </div>
+            <label class="toggle-switch" aria-label="Toggle Sound Effects">
+              <input type="checkbox" id="soundToggle" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <!-- Card 3D Flip Animations Toggle -->
+          <div class="setting-row">
+            <div class="setting-row__info">
+              <div class="setting-row__label">3D Card Flip Animations</div>
+              <p class="setting-row__desc">Enable CSS3 hardware-accelerated perspective rotations.</p>
+            </div>
+            <label class="toggle-switch" aria-label="Toggle Card Animations">
+              <input type="checkbox" id="animationToggle" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="settings-actions-bar">
+            <button id="resetDefaultsBtn" class="btn btn--outline" type="button">
+              🔄 Restore Defaults
+            </button>
+            <button id="savePreferencesBtn" class="btn btn--primary" type="submit">
+              💾 Save Preferences
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- 3. Danger Zone / Database Management -->
+      <section class="settings-section" aria-label="Database Management">
+        <header class="settings-section__header">
+          <h2 class="settings-section__title text-danger">⚠️ Database & Storage Management</h2>
+          <p class="settings-section__subtitle">Manage IndexedDB database and local application state.</p>
+        </header>
+
+        <div class="setting-row">
+          <div class="setting-row__info">
+            <div class="setting-row__label">Reset Application Data</div>
+            <p class="setting-row__desc">Clears all game history and custom card sets from IndexedDB.</p>
+          </div>
+          <button id="clearAllDataBtn" class="btn btn--danger-outline" type="button">
+            🗑️ Clear Database
+          </button>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <!-- =========================================================================
+       Modal: Clear All Data Confirmation Dialog
+       ========================================================================= -->
+  <div id="resetAllConfirmModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="resetModalTitle">
+    <div class="modal-dialog">
+      <header class="modal__header">
+        <h2 id="resetModalTitle" class="modal__title text-danger">⚠️ Clear All Application Data</h2>
+      </header>
+      <div class="modal__body">
+        <p>This will completely clear:</p>
+        <ul>
+          <li>All saved match history from IndexedDB</li>
+          <li>All user-created custom card sets</li>
+          <li>Reset localStorage preferences to defaults</li>
+        </ul>
+        <p class="text-danger font-bold mt-2">This action is irreversible!</p>
+      </div>
+      <footer class="modal__footer">
+        <button id="cancelResetAllBtn" class="btn btn--outline" type="button">Cancel</button>
+        <button id="confirmResetAllBtn" class="btn btn--danger" type="button">Yes, Wipe Data</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       App Footer
+       ========================================================================= -->
+  <footer class="app-footer">
+    <div class="container footer-content">
+      <p>© 2026 Memory Match — Pure Vanilla HTML5, CSS3 & JavaScript College Project.</p>
+      <p>Powered by <span class="text-primary font-bold">IndexedDB</span> & Web Storage</p>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       JavaScript Modules (Strictly External - Zero Inline Scripts)
+       ========================================================================= -->
+  <script src="js/utils.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/indexedDB.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/settings.js"></script>
+
+</body>
+</html>
