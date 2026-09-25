@@ -19,7 +19,7 @@ This application is designed as an academic showcase demonstrating DOM manipulat
 
 ---
 
-## 📁 Project Structure (Day 1 State)
+## 📁 Project Structure (Day 2 State)
 
 ```text
 memoryCardGame/
@@ -30,7 +30,11 @@ memoryCardGame/
 ├── settings.html               # Preferences & Profile settings template
 ├── css/
 │   ├── style.css               # Design tokens, variables, reset & typography
-│   └── components.css          # Navigation, buttons, modals, badges & form controls
+│   ├── components.css          # Navigation, buttons, modals, badges & form controls
+│   ├── game.css                # 3D card architecture, grid templates & HUD/controls
+│   └── responsive.css          # Fluid mobile, tablet, and desktop breakpoints
+└── js/
+    └── utils.js                # Fisher-Yates shuffle, formatTime, Web Audio synthesizer, toasts
 ```
 
 ---

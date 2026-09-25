@@ -497,6 +497,10 @@ body.dark-theme .badge--danger {
   border-left: 4px solid var(--primary);
 }
 
+.toast--warning {
+  border-left: 4px solid var(--warning);
+}
+
 /* --------------------------------------------------------------------------
    Footer
    -------------------------------------------------------------------------- */
