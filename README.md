@@ -19,7 +19,7 @@ This application is designed as an academic showcase demonstrating DOM manipulat
 
 ---
 
-## 📁 Project Structure (Day 2 State)
+## 📁 Project Structure (Day 3 State)
 
 ```text
 memoryCardGame/
@@ -34,7 +34,11 @@ memoryCardGame/
 │   ├── game.css                # 3D card architecture, grid templates & HUD/controls
 │   └── responsive.css          # Fluid mobile, tablet, and desktop breakpoints
 └── js/
-    └── utils.js                # Fisher-Yates shuffle, formatTime, Web Audio synthesizer, toasts
+    ├── utils.js                # Fisher-Yates shuffle, formatTime, Web Audio synthesizer, toasts
+    ├── storage.js              # Cookies (player, lastVisit), localStorage (theme, sound, anims)
+    ├── indexedDB.js            # Structured database storage (MemoryMatchDB)
+    ├── app.js                  # Global theme toggle, active nav links & greeting banners
+    └── game.js                 # Dynamic board generator, themes, flip interactions & comparisons
 ```
 
 ---
