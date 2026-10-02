@@ -179,6 +179,15 @@
   width: 100%;
   gap: 1rem;
   box-sizing: border-box;
+  transition: filter var(--transition-normal), opacity var(--transition-normal);
+}
+
+/* Paused State: Blurs board to prevent peeking and disables clicks */
+.card-board.is-paused {
+  filter: blur(10px);
+  pointer-events: none;
+  opacity: 0.55;
+  user-select: none;
 }
 
 /* Easy Difficulty: 4x4 Grid (16 Cards, 8 Pairs) */

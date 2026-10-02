@@ -1,13 +1,19 @@
 /**
  * ============================================================================
- * GAME.JS (Part 1) - Memory Match Game Engine & Card Logic
- * Memory Match Application - Day 3
+ * GAME.JS - Memory Match Game Engine & Card Logic (Complete: Parts 1 & 2)
+ * Memory Match Application - Day 4
  * ============================================================================
  * Features:
  * - Predefined card sets (Featured Pokémon theme + Animals, Food, Programming, Space)
- * - Dynamic card board generation with pair slicing based on difficulty
+ * - Dynamic support for user-created custom card sets retrieved from IndexedDB
+ * - Dynamic card board generator slicing pairs based on difficulty
  * - Fisher-Yates array shuffling and hardware-accelerated 3D card injection
  * - Interactive card flipping, 2-card comparison, match lock state, and mismatch reset
+ * - Precise timer using setInterval & clearInterval with MM:SS formatting
+ * - Move counter incremented on every pair attempt
+ * - Dynamic scoring formula factoring in base score, combo streaks, time bonus/penalty, and move efficiency
+ * - Complete pause system: Pause button & Escape key freeze timer, blur board (.is-paused), and display modal
+ * - Victory detection: Plays victory sound, computes accuracy %, displays Win Modal, and persists record to IndexedDB
  * ============================================================================
  */
 
@@ -15,7 +21,7 @@
 
 /**
  * ----------------------------------------------------------------------------
- * 1. Predefined Card Themes (18+ Unique Items Each for 6x6 Hard Grid)
+ * 1. Predefined Card Themes (20 Unique Items Each)
  * ----------------------------------------------------------------------------
  */
 const CARD_THEMES = {
@@ -139,19 +145,22 @@ const DIFFICULTY_CONFIG = {
     pairs: 8,
     gridClass: 'grid--easy',
     cols: 4,
-    rows: 4
+    rows: 4,
+    targetTimeSeconds: 90
   },
   medium: {
     pairs: 10,
     gridClass: 'grid--medium',
     cols: 5,
-    rows: 4
+    rows: 4,
+    targetTimeSeconds: 140
   },
   hard: {
     pairs: 18,
     gridClass: 'grid--hard',
     cols: 6,
-    rows: 6
+    rows: 6,
+    targetTimeSeconds: 240
   }
 };
 
@@ -162,14 +171,19 @@ const DIFFICULTY_CONFIG = {
  */
 let currentTheme = 'pokemon';
 let currentDifficulty = 'easy';
+let customDecksMap = {}; // Maps custom ID to custom deck data
+
 let flippedCards = [];
 let matchedPairs = 0;
 let totalPairs = 8;
 let movesCount = 0;
 let currentScore = 0;
+let consecutiveMatches = 0; // Combo multiplier tracker
+
 let isBoardLocked = false;
 let isGameActive = false;
 let isPaused = false;
+
 let timerSeconds = 0;
 let timerInterval = null;
 
@@ -202,14 +216,15 @@ let playAgainBtnEl = null;
  * Initialize on DOMContentLoaded
  */
 document.addEventListener('DOMContentLoaded', () => {
-  // Only initialize game logic if on a page containing the cardBoard
   cardBoardEl = document.getElementById('cardBoard');
   if (!cardBoardEl) return;
 
   cacheDOMElements();
   bindEventListeners();
   loadSavedPreferences();
-  initGame();
+  loadCustomThemesFromDB().then(() => {
+    initGame();
+  });
 });
 
 /**
@@ -258,12 +273,53 @@ function loadSavedPreferences() {
 }
 
 /**
+ * Queries IndexedDB for any custom card sets and appends them to the theme dropdown
+ */
+function loadCustomThemesFromDB() {
+  if (typeof getAllCardSets !== 'function') {
+    return Promise.resolve();
+  }
+
+  return getAllCardSets()
+    .then((customSets) => {
+      if (!Array.isArray(customSets) || customSets.length === 0 || !themeSelectEl) {
+        return;
+      }
+
+      // Check if custom optgroup already exists
+      let customGroup = themeSelectEl.querySelector('optgroup[data-custom-group="true"]');
+      if (!customGroup) {
+        customGroup = document.createElement('optgroup');
+        customGroup.label = '🎨 Custom Card Sets';
+        customGroup.setAttribute('data-custom-group', 'true');
+        themeSelectEl.appendChild(customGroup);
+      }
+
+      customGroup.innerHTML = '';
+      customSets.forEach((set) => {
+        customDecksMap[set.id] = set.cards;
+        const option = document.createElement('option');
+        option.value = set.id;
+        option.textContent = `${set.name} (${set.cards.length} cards)`;
+        if (set.id === currentTheme) {
+          option.selected = true;
+        }
+        customGroup.appendChild(option);
+      });
+    })
+    .catch((err) => {
+      console.warn('Could not load custom card sets into dropdown:', err);
+    });
+}
+
+/**
  * ----------------------------------------------------------------------------
  * 4. Game Initialization & Dynamic Board Generator
  * ----------------------------------------------------------------------------
  */
 function initGame() {
   stopTimer();
+  unpauseGame();
   closeModals();
 
   // Read selected controls
@@ -279,6 +335,7 @@ function initGame() {
   matchedPairs = 0;
   movesCount = 0;
   currentScore = 0;
+  consecutiveMatches = 0;
   timerSeconds = 0;
   isGameActive = false;
   isPaused = false;
@@ -290,10 +347,16 @@ function initGame() {
 
   // Configure grid layout class on #cardBoard
   cardBoardEl.className = `card-board ${config.gridClass}`;
+  cardBoardEl.classList.remove('is-paused');
   cardBoardEl.innerHTML = '';
 
-  // Retrieve base card list for active theme
-  const sourceDeck = CARD_THEMES[currentTheme] || CARD_THEMES.pokemon;
+  // Retrieve base card list for active theme (built-in or custom from IndexedDB)
+  let sourceDeck = customDecksMap[currentTheme] || CARD_THEMES[currentTheme] || CARD_THEMES.pokemon;
+
+  // If source deck has fewer cards than totalPairs, pad with defaults
+  if (sourceDeck.length < totalPairs) {
+    sourceDeck = [...sourceDeck, ...CARD_THEMES.pokemon];
+  }
 
   // Slice pairs based on difficulty
   const selectedCards = sourceDeck.slice(0, totalPairs);
@@ -398,7 +461,7 @@ function handleCardClick(cardBtn, cardData) {
  */
 function processCardComparison() {
   isBoardLocked = true;
-  movesCount++;
+  movesCount++; // Move counter incremented on every pair attempt
   updateHUD();
 
   const [cardA, cardB] = flippedCards;
@@ -412,13 +475,17 @@ function processCardComparison() {
 }
 
 /**
- * Handle successful match
+ * Handle successful match with combo streak scoring
  */
 function handleMatch(cardA, cardB) {
   matchedPairs++;
+  consecutiveMatches++;
 
-  // Reward points: base 100 points with speed/move consideration
-  currentScore += 100;
+  // Base score per match + Combo multiplier
+  const baseMatchScore = 120;
+  const comboBonus = (consecutiveMatches - 1) * 30;
+  const matchPoints = baseMatchScore + comboBonus;
+  currentScore += matchPoints;
   updateHUD();
 
   // Play cheerful match arpeggio
@@ -442,11 +509,14 @@ function handleMatch(cardA, cardB) {
 }
 
 /**
- * Handle non-matching pair
+ * Handle non-matching pair with mismatch penalty and shake animation
  */
 function handleMismatch(cardA, cardB) {
-  // Minor score penalty
-  currentScore = Math.max(0, currentScore - 5);
+  consecutiveMatches = 0; // Reset combo streak
+
+  // Move / mismatch penalty
+  const mismatchPenalty = 10;
+  currentScore = Math.max(0, currentScore - mismatchPenalty);
   updateHUD();
 
   // Play subtle mismatch audio cue
@@ -471,15 +541,27 @@ function handleMismatch(cardA, cardB) {
 }
 
 /**
- * Handle victory when all pairs are matched
+ * ----------------------------------------------------------------------------
+ * 6. Win Screen & Database Persistence
+ * ----------------------------------------------------------------------------
  */
 function handleVictory() {
   stopTimer();
   isGameActive = false;
 
-  // Time bonus added to score (faster finish = more points)
-  const timeBonus = Math.max(0, 300 - timerSeconds) * 2;
-  currentScore += timeBonus;
+  const config = DIFFICULTY_CONFIG[currentDifficulty] || DIFFICULTY_CONFIG.easy;
+
+  // Time bonus / penalty formula:
+  // Finishing faster than target yields up to 500 bonus points
+  const targetTime = config.targetTimeSeconds || 100;
+  const timeBonus = Math.max(0, (targetTime - timerSeconds) * 6);
+
+  // Move efficiency bonus: rewards solving close to minimum moves (totalPairs)
+  const minimumMoves = totalPairs;
+  const moveEfficiencyBonus = Math.max(0, (minimumMoves * 2 - movesCount) * 12);
+
+  // Final score summation
+  currentScore = Math.max(0, currentScore + timeBonus + moveEfficiencyBonus);
   updateHUD();
 
   // Play triumphant victory fanfare
@@ -487,16 +569,18 @@ function handleVictory() {
     SoundEffects.victory();
   }
 
-  if (typeof showToast === 'function') {
-    showToast('🎉 Magnificently done! All pairs matched!', 'success', 3500);
-  }
+  // Accuracy calculation: percentage of optimal moves vs actual moves
+  const accuracy = movesCount > 0 ? Math.min(100, Math.round((totalPairs / movesCount) * 100)) : 100;
+  const formattedTime = typeof formatTime === 'function' ? formatTime(timerSeconds) : `${timerSeconds}s`;
 
-  // Calculate final accuracy percentage
-  const accuracy = movesCount > 0 ? Math.round((totalPairs / movesCount) * 100) : 100;
+  // Display celebratory toast
+  if (typeof showToast === 'function') {
+    showToast(`🎉 Victory! All ${totalPairs} pairs matched in ${formattedTime}!`, 'success', 3500);
+  }
 
   // Populate win modal statistics
   if (winScoreEl) winScoreEl.textContent = currentScore;
-  if (winTimeEl) winTimeEl.textContent = typeof formatTime === 'function' ? formatTime(timerSeconds) : timerSeconds;
+  if (winTimeEl) winTimeEl.textContent = formattedTime;
   if (winMovesEl) winMovesEl.textContent = movesCount;
   if (winAccuracyEl) winAccuracyEl.textContent = `${accuracy}%`;
 
@@ -504,19 +588,52 @@ function handleVictory() {
   if (winModalEl) {
     setTimeout(() => {
       winModalEl.classList.add('modal--active');
-    }, 600);
+    }, 550);
+  }
+
+  // Save session record to IndexedDB
+  persistGameResultToIndexedDB(accuracy, formattedTime);
+}
+
+/**
+ * Persists match history to IndexedDB via MemoryMatchDB
+ */
+function persistGameResultToIndexedDB(accuracy, formattedTime) {
+  const gameRecord = {
+    date: new Date().toISOString(),
+    difficulty: currentDifficulty,
+    theme: currentTheme,
+    moves: movesCount,
+    time: formattedTime,
+    timeSeconds: timerSeconds,
+    accuracy: accuracy,
+    score: currentScore,
+    won: true
+  };
+
+  if (typeof saveGameHistory === 'function') {
+    saveGameHistory(gameRecord)
+      .then((saved) => {
+        if (typeof showToast === 'function') {
+          showToast(`Game results saved to IndexedDB (Log #${saved.id})`, 'info', 2200);
+        }
+      })
+      .catch((err) => {
+        console.warn('Could not save game history to IndexedDB:', err);
+      });
   }
 }
 
 /**
  * ----------------------------------------------------------------------------
- * 6. Timer & HUD Management
+ * 7. Timer & HUD Management
  * ----------------------------------------------------------------------------
  */
 function startTimer() {
   if (timerInterval) clearInterval(timerInterval);
+
   timerInterval = setInterval(() => {
-    if (!isPaused) {
+    if (!isPaused && isGameActive) {
       timerSeconds++;
       if (timeElapsedEl) {
         timeElapsedEl.textContent = typeof formatTime === 'function' ? formatTime(timerSeconds) : timerSeconds;
@@ -543,7 +660,62 @@ function updateHUD() {
 
 /**
  * ----------------------------------------------------------------------------
- * 7. Controls & Modal Event Listeners
+ * 8. Pause System (Pause Button & Escape Key)
+ * ----------------------------------------------------------------------------
+ */
+function pauseGame() {
+  if (!isGameActive || isPaused) return;
+
+  isPaused = true;
+  stopTimer();
+
+  // Blur card board with CSS class
+  if (cardBoardEl) {
+    cardBoardEl.classList.add('is-paused');
+  }
+
+  // Display pause modal
+  if (pauseModalEl) {
+    pauseModalEl.classList.add('modal--active');
+  }
+
+  if (typeof SoundEffects !== 'undefined' && SoundEffects.flip) {
+    SoundEffects.flip();
+  }
+}
+
+function unpauseGame() {
+  if (!isPaused) return;
+
+  isPaused = false;
+
+  // Unblur card board
+  if (cardBoardEl) {
+    cardBoardEl.classList.remove('is-paused');
+  }
+
+  // Close pause modal
+  if (pauseModalEl) {
+    pauseModalEl.classList.remove('modal--active');
+  }
+
+  // Resume timer
+  if (isGameActive) {
+    startTimer();
+  }
+}
+
+function togglePause() {
+  if (isPaused) {
+    unpauseGame();
+  } else {
+    pauseGame();
+  }
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * 9. Event Listeners & Keyboard Accessibility
  * ----------------------------------------------------------------------------
  */
 function bindEventListeners() {
@@ -592,25 +764,21 @@ function bindEventListeners() {
   // Pause Button
   if (pauseBtnEl) {
     pauseBtnEl.addEventListener('click', () => {
-      if (!isGameActive) return;
-      isPaused = true;
-      if (pauseModalEl) {
-        pauseModalEl.classList.add('modal--active');
-      }
+      pauseGame();
     });
   }
 
   // Resume Button in Pause Modal
   if (resumeBtnEl) {
     resumeBtnEl.addEventListener('click', () => {
-      isPaused = false;
-      closeModals();
+      unpauseGame();
     });
   }
 
   // Restart from Pause Modal
   if (modalRestartBtnEl) {
     modalRestartBtnEl.addEventListener('click', () => {
+      unpauseGame();
       closeModals();
       initGame();
     });
@@ -623,6 +791,17 @@ function bindEventListeners() {
       initGame();
     });
   }
+
+  // Global Keyboard Navigation & Escape Key Pause System
+  document.addEventListener('keydown', (event) => {
+    // Escape key toggles pause when game is active or paused
+    if (event.key === 'Escape') {
+      if (isGameActive && !winModalEl?.classList.contains('modal--active')) {
+        event.preventDefault();
+        togglePause();
+      }
+    }
+  });
 }
 
 function closeModals() {
@@ -635,6 +814,8 @@ function closeModals() {
  */
 if (typeof window !== 'undefined') {
   window.initGame = initGame;
+  window.pauseGame = pauseGame;
+  window.unpauseGame = unpauseGame;
   window.CARD_THEMES = CARD_THEMES;
   window.DIFFICULTY_CONFIG = DIFFICULTY_CONFIG;
 }
