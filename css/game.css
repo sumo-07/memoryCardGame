@@ -191,24 +191,59 @@
 
 /* Easy Difficulty: 4x4 Grid (16 Cards, 8 Pairs) */
 .grid--easy {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-template-rows: repeat(4, auto);
-  max-width: 580px;
+  --cols: 4;
+  --rows: 4;
+  --gap: clamp(4px, 1vh, 10px);
+  gap: var(--gap);
+  --avail-h: calc(100dvh - 190px);
+  --avail-w: min(calc(100vw - 36px), 740px);
+  --card-w: min(
+    calc((var(--avail-h) - 3 * var(--gap)) / 4 * 0.75),
+    calc((var(--avail-w) - 3 * var(--gap)) / 4),
+    130px
+  );
+  --card-h: calc(var(--card-w) / 0.75);
+  grid-template-columns: repeat(4, var(--card-w));
+  grid-template-rows: repeat(4, var(--card-h));
+  max-width: 100%;
 }
 
 /* Medium Difficulty: 5x4 Grid (20 Cards, 10 Pairs) */
 .grid--medium {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  grid-template-rows: repeat(4, auto);
-  max-width: 680px;
+  --cols: 5;
+  --rows: 4;
+  --gap: clamp(4px, 0.9vh, 9px);
+  gap: var(--gap);
+  --avail-h: calc(100dvh - 190px);
+  --avail-w: min(calc(100vw - 36px), 820px);
+  --card-w: min(
+    calc((var(--avail-h) - 3 * var(--gap)) / 4 * 0.75),
+    calc((var(--avail-w) - 4 * var(--gap)) / 5),
+    114px
+  );
+  --card-h: calc(var(--card-w) / 0.75);
+  grid-template-columns: repeat(5, var(--card-w));
+  grid-template-rows: repeat(4, var(--card-h));
+  max-width: 100%;
 }
 
 /* Hard Difficulty: 6x6 Grid (36 Cards, 18 Pairs) */
 .grid--hard {
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  grid-template-rows: repeat(6, auto);
-  max-width: 780px;
-  gap: 0.75rem;
+  --cols: 6;
+  --rows: 6;
+  --gap: clamp(3px, 0.7vh, 7px);
+  gap: var(--gap);
+  --avail-h: calc(100dvh - 190px);
+  --avail-w: min(calc(100vw - 34px), 860px);
+  --card-w: min(
+    calc((var(--avail-h) - 5 * var(--gap)) / 6 * 0.75),
+    calc((var(--avail-w) - 5 * var(--gap)) / 6),
+    86px
+  );
+  --card-h: calc(var(--card-w) / 0.75);
+  grid-template-columns: repeat(6, var(--card-w));
+  grid-template-rows: repeat(6, var(--card-h));
+  max-width: 100%;
 }
 
 /* --------------------------------------------------------------------------

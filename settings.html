@@ -3,14 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Memory Match Settings - Customize player name, audio effects, animations, themes, and game preferences.">
-  <title>Memory Match — Preferences & Settings</title>
+  <meta name="description" content="MemoQuest Settings - Customize player name, audio effects, animations, themes, and game preferences.">
+  <title>MemoQuest — Trainer Preferences & Settings</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
   <!-- External Stylesheets (Zero Inline CSS) -->
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/settings.css">
   <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/pokemon-theme.css">
 </head>
 <body>
 
@@ -19,13 +23,13 @@
        ========================================================================= -->
   <header class="app-header">
     <div class="container navbar">
-      <a href="index.html" class="nav-brand" aria-label="Memory Match Home">
-        <span class="nav-brand__icon" aria-hidden="true">🃏</span>
-        <span>Memory <span class="nav-brand__accent">Match</span></span>
+      <a href="index.html" class="nav-brand" aria-label="MemoQuest Home">
+        <span class="pokeball" aria-hidden="true"></span>
+        <span>Memo<span class="nav-brand__accent">Quest</span></span>
       </a>
 
       <nav class="nav-menu" aria-label="Main Navigation">
-        <a href="index.html" class="nav-link">🎮 Game</a>
+        <a href="index.html" class="nav-link">🎮 Arena</a>
         <a href="dashboard.html" class="nav-link">📊 Dashboard</a>
         <a href="settings.html" class="nav-link active">⚙️ Settings</a>
       </nav>
@@ -46,7 +50,7 @@
     <!-- Header & Welcome -->
     <section class="game-welcome-banner" aria-label="Settings Overview">
       <div class="welcome-text">
-        <span>⚙️ Player Preferences for <span class="welcome-user-highlight js-player-name">Player</span></span>
+        <span>⚙️ Trainer Preferences for Trainer <span class="welcome-user-highlight js-player-name">Player</span></span>
       </div>
       <div class="welcome-last-visit js-last-visit">
         Last active: Recently
@@ -109,7 +113,7 @@
               <p class="setting-row__desc">Card deck imagery and theme icons applied by default.</p>
             </div>
             <select id="defaultThemeSelect" class="form-select">
-              <option value="pokemon">⚡ Pokémon (Featured)</option>
+              <option value="pokemon" selected>⚡ Pokémon (Featured)</option>
               <option value="animals">🐾 Animals</option>
               <option value="food">🍕 Food & Treats</option>
               <option value="programming">💻 Programming</option>
@@ -220,7 +224,7 @@
        ========================================================================= -->
   <footer class="app-footer">
     <div class="container footer-content">
-      <p>© 2026 Memory Match — Pure Vanilla HTML5, CSS3 & JavaScript College Project.</p>
+      <p>© 2026 MemoQuest — Pure Vanilla HTML5, CSS3 & JavaScript College Project.</p>
       <p>Powered by <span class="text-primary font-bold">IndexedDB</span> & Web Storage</p>
     </div>
   </footer>

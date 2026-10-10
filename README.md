@@ -1,4 +1,4 @@
-# Memory Match 🃏
+# MemoQuest 🃏
 
 A feature-rich, high-performance, and responsive **Memory Card Matching Game Platform** built purely with **Vanilla HTML5, CSS3, and modern JavaScript (ES6+)**.
 
@@ -33,7 +33,8 @@ memoryCardGame/
 │   ├── game.css                # 3D card architecture, grid layouts, HUD, pause blur
 │   ├── dashboard.css           # Statistics cards, CSS visual charts, CRUD grid, data table
 │   ├── settings.css            # Form rows, theme cards, iOS toggle switches, action bars
-│   └── responsive.css          # Multi-device media queries (Mobile, Tablet, Desktop)
+│   ├── responsive.css          # Multi-device media queries (Mobile, Tablet, Desktop)
+│   └── pokemon-theme.css       # Pokémon & Pokédex theme, trading-card faces, retro typography
 └── js/
     ├── utils.js                # Fisher-Yates shuffle, formatTime, Web Audio synthesizer, toasts
     ├── storage.js              # Cookie manager (player, visit) & localStorage manager (theme, sound)
@@ -227,4 +228,4 @@ Navigate to `http://localhost:8000` in your browser.
 
 ---
 
-*© 2026 Memory Match — Developed as a Vanilla Web Standards College Project.*
+*© 2026 MemoQuest — Developed as a Vanilla Web Standards College Project.*

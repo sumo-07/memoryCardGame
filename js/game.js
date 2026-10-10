@@ -210,6 +210,10 @@ let winTimeEl = null;
 let winMovesEl = null;
 let winAccuracyEl = null;
 let playAgainBtnEl = null;
+let gameMenuModalEl = null;
+let openMenuBtnEl = null;
+let closeMenuBtnEl = null;
+let menuDoneBtnEl = null;
 
 /**
  * Initialize on DOMContentLoaded
@@ -250,6 +254,10 @@ function cacheDOMElements() {
   winMovesEl = document.getElementById('winMoves');
   winAccuracyEl = document.getElementById('winAccuracy');
   playAgainBtnEl = document.getElementById('playAgainBtn');
+  gameMenuModalEl = document.getElementById('gameMenuModal');
+  openMenuBtnEl = document.getElementById('openMenuBtn');
+  closeMenuBtnEl = document.getElementById('closeMenuBtn');
+  menuDoneBtnEl = document.getElementById('menuDoneBtn');
 }
 
 /**
@@ -346,6 +354,7 @@ function initGame() {
 
   // Configure grid layout class on #cardBoard
   cardBoardEl.className = `card-board ${config.gridClass}`;
+  cardBoardEl.dataset.cardTheme = currentTheme;
   cardBoardEl.classList.remove('is-paused');
   cardBoardEl.innerHTML = '';
 
@@ -398,6 +407,7 @@ function createCardElement(card) {
   btn.type = 'button';
   btn.dataset.pairId = card.pairId;
   btn.dataset.uid = card.uid;
+  btn.dataset.type = (card.badge || '').toLowerCase();
   btn.setAttribute('role', 'button');
   btn.setAttribute('tabindex', '0');
   btn.setAttribute('aria-label', 'Mystery Card: Face Down');
@@ -791,10 +801,33 @@ function bindEventListeners() {
     });
   }
 
+  // Options Menu Dialog Interactions
+  if (openMenuBtnEl) {
+    openMenuBtnEl.addEventListener('click', openGameMenu);
+  }
+  if (closeMenuBtnEl) {
+    closeMenuBtnEl.addEventListener('click', closeGameMenu);
+  }
+  if (menuDoneBtnEl) {
+    menuDoneBtnEl.addEventListener('click', closeGameMenu);
+  }
+  if (gameMenuModalEl) {
+    gameMenuModalEl.addEventListener('click', (e) => {
+      if (e.target === gameMenuModalEl) {
+        closeGameMenu();
+      }
+    });
+  }
+
   // Global Keyboard Navigation & Escape Key Pause System
   document.addEventListener('keydown', (event) => {
-    // Escape key toggles pause when game is active or paused
+    // Escape key closes options menu or toggles pause
     if (event.key === 'Escape') {
+      if (gameMenuModalEl && gameMenuModalEl.classList.contains('modal--active')) {
+        event.preventDefault();
+        closeGameMenu();
+        return;
+      }
       if (isGameActive && !winModalEl?.classList.contains('modal--active')) {
         event.preventDefault();
         togglePause();
@@ -803,9 +836,24 @@ function bindEventListeners() {
   });
 }
 
+function openGameMenu() {
+  if (gameMenuModalEl) {
+    gameMenuModalEl.classList.add('modal--active');
+    if (openMenuBtnEl) openMenuBtnEl.setAttribute('aria-expanded', 'true');
+  }
+}
+
+function closeGameMenu() {
+  if (gameMenuModalEl) {
+    gameMenuModalEl.classList.remove('modal--active');
+    if (openMenuBtnEl) openMenuBtnEl.setAttribute('aria-expanded', 'false');
+  }
+}
+
 function closeModals() {
   if (pauseModalEl) pauseModalEl.classList.remove('modal--active');
   if (winModalEl) winModalEl.classList.remove('modal--active');
+  if (gameMenuModalEl) closeGameMenu();
 }
 
 /**
