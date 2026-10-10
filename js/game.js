@@ -25,26 +25,26 @@
  */
 const CARD_THEMES = {
   pokemon: [
-    { icon: '⚡', label: 'Pikachu', badge: 'Electric' },
-    { icon: '🔥', label: 'Charizard', badge: 'Fire' },
-    { icon: '💧', label: 'Blastoise', badge: 'Water' },
-    { icon: '🌿', label: 'Venusaur', badge: 'Grass' },
-    { icon: '👻', label: 'Gengar', badge: 'Ghost' },
-    { icon: '🔮', label: 'Mewtwo', badge: 'Psychic' },
-    { icon: '🥊', label: 'Lucario', badge: 'Fighting' },
-    { icon: '🐉', label: 'Dragonite', badge: 'Dragon' },
-    { icon: '💤', label: 'Snorlax', badge: 'Normal' },
-    { icon: '🦊', label: 'Eevee', badge: 'Normal' },
-    { icon: '🌊', label: 'Gyarados', badge: 'Water' },
-    { icon: '🎤', label: 'Jigglypuff', badge: 'Fairy' },
-    { icon: '💪', label: 'Machamp', badge: 'Fighting' },
-    { icon: '🥄', label: 'Alakazam', badge: 'Psychic' },
-    { icon: '🐕', label: 'Arcanine', badge: 'Fire' },
-    { icon: '🧊', label: 'Lapras', badge: 'Ice' },
-    { icon: '🦅', label: 'Zapdos', badge: 'Legendary' },
-    { icon: '✨', label: 'Rayquaza', badge: 'Legendary' },
-    { icon: '🌙', label: 'Umbreon', badge: 'Dark' },
-    { icon: '☀️', label: 'Espeon', badge: 'Psychic' }
+    { image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png', label: 'Pikachu', badge: 'Electric', id: 25, name: 'pikachu' },
+    { image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png', label: 'Charizard', badge: 'Fire', id: 6, name: 'charizard' },
+    { image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png', label: 'Blastoise', badge: 'Water', id: 9, name: 'blastoise' },
+    { image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png', label: 'Venusaur', badge: 'Grass', id: 3, name: 'venusaur' },
+    { image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/94.png', label: 'Gengar', badge: 'Ghost', id: 94, name: 'gengar' },
+    { image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png', label: 'Mewtwo', badge: 'Psychic', id: 150, name: 'mewtwo' },
+    { image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/448.png', label: 'Lucario', badge: 'Fighting', id: 448, name: 'lucario' },
+    { image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/149.png', label: 'Dragonite', badge: 'Dragon', id: 149, name: 'dragonite' },
+    { image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/143.png', label: 'Snorlax', badge: 'Normal', id: 143, name: 'snorlax' },
+    { image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png', label: 'Eevee', badge: 'Normal', id: 133, name: 'eevee' },
+    { image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/130.png', label: 'Gyarados', badge: 'Water', id: 130, name: 'gyarados' },
+    { image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/39.png', label: 'Jigglypuff', badge: 'Fairy', id: 39, name: 'jigglypuff' },
+    { image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/68.png', label: 'Machamp', badge: 'Fighting', id: 68, name: 'machamp' },
+    { image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/65.png', label: 'Alakazam', badge: 'Psychic', id: 65, name: 'alakazam' },
+    { image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/59.png', label: 'Arcanine', badge: 'Fire', id: 59, name: 'arcanine' },
+    { image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/131.png', label: 'Lapras', badge: 'Ice', id: 131, name: 'lapras' },
+    { image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/145.png', label: 'Zapdos', badge: 'Electric', id: 145, name: 'zapdos' },
+    { image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/384.png', label: 'Rayquaza', badge: 'Dragon', id: 384, name: 'rayquaza' },
+    { image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/197.png', label: 'Umbreon', badge: 'Dark', id: 197, name: 'umbreon' },
+    { image: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/196.png', label: 'Espeon', badge: 'Psychic', id: 196, name: 'espeon' }
   ],
   animals: [
     { icon: '🦁', label: 'Lion', badge: 'Mammal' },
@@ -225,6 +225,10 @@ document.addEventListener('DOMContentLoaded', () => {
   cacheDOMElements();
   bindEventListeners();
   loadSavedPreferences();
+
+  // Asynchronously fetch live assets from PokéAPI
+  fetchPokemonFromPokeAPI();
+
   loadCustomThemesFromDB().then(() => {
     initGame();
   });
@@ -321,6 +325,108 @@ function loadCustomThemesFromDB() {
 
 /**
  * ----------------------------------------------------------------------------
+ * PokéAPI Integration
+ * ----------------------------------------------------------------------------
+ * Dynamically fetches live Pokémon sprites, artwork, and types from PokéAPI:
+ * https://pokeapi.co/api/v2/pokemon/{name}
+ */
+const POKEMON_ROSTER = [
+  { name: 'pikachu', id: 25, fallbackBadge: 'Electric' },
+  { name: 'charizard', id: 6, fallbackBadge: 'Fire' },
+  { name: 'blastoise', id: 9, fallbackBadge: 'Water' },
+  { name: 'venusaur', id: 3, fallbackBadge: 'Grass' },
+  { name: 'gengar', id: 94, fallbackBadge: 'Ghost' },
+  { name: 'mewtwo', id: 150, fallbackBadge: 'Psychic' },
+  { name: 'lucario', id: 448, fallbackBadge: 'Fighting' },
+  { name: 'dragonite', id: 149, fallbackBadge: 'Dragon' },
+  { name: 'snorlax', id: 143, fallbackBadge: 'Normal' },
+  { name: 'eevee', id: 133, fallbackBadge: 'Normal' },
+  { name: 'gyarados', id: 130, fallbackBadge: 'Water' },
+  { name: 'jigglypuff', id: 39, fallbackBadge: 'Fairy' },
+  { name: 'machamp', id: 68, fallbackBadge: 'Fighting' },
+  { name: 'alakazam', id: 65, fallbackBadge: 'Psychic' },
+  { name: 'arcanine', id: 59, fallbackBadge: 'Fire' },
+  { name: 'lapras', id: 131, fallbackBadge: 'Ice' },
+  { name: 'zapdos', id: 145, fallbackBadge: 'Electric' },
+  { name: 'rayquaza', id: 384, fallbackBadge: 'Dragon' },
+  { name: 'umbreon', id: 197, fallbackBadge: 'Dark' },
+  { name: 'espeon', id: 196, fallbackBadge: 'Psychic' }
+];
+
+let isPokeApiFetched = false;
+
+async function fetchPokemonFromPokeAPI() {
+  if (isPokeApiFetched) return CARD_THEMES.pokemon;
+  const cacheKey = 'memoquest_pokeapi_cards_v1';
+
+  try {
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (Array.isArray(parsed) && parsed.length >= POKEMON_ROSTER.length) {
+        CARD_THEMES.pokemon = parsed;
+        isPokeApiFetched = true;
+        return parsed;
+      }
+    }
+  } catch (err) {
+    console.warn('Could not read PokéAPI cache:', err);
+  }
+
+  try {
+    const fetchPromises = POKEMON_ROSTER.map(async (entry) => {
+      try {
+        const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${entry.name}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+
+        const officialArtwork = data.sprites?.other?.['official-artwork']?.front_default;
+        const frontSprite = data.sprites?.front_default;
+        const imgUrl = officialArtwork || frontSprite || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${entry.id}.png`;
+
+        const primaryType = data.types?.[0]?.type?.name || entry.fallbackBadge.toLowerCase();
+        const formattedType = primaryType.charAt(0).toUpperCase() + primaryType.slice(1);
+        const formattedName = data.name.charAt(0).toUpperCase() + data.name.slice(1);
+
+        return {
+          id: data.id || entry.id,
+          name: data.name,
+          label: formattedName,
+          badge: formattedType,
+          image: imgUrl
+        };
+      } catch (e) {
+        return {
+          id: entry.id,
+          name: entry.name,
+          label: entry.name.charAt(0).toUpperCase() + entry.name.slice(1),
+          badge: entry.fallbackBadge,
+          image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${entry.id}.png`
+        };
+      }
+    });
+
+    const results = await Promise.all(fetchPromises);
+    if (results && results.length) {
+      CARD_THEMES.pokemon = results;
+      isPokeApiFetched = true;
+      try {
+        localStorage.setItem(cacheKey, JSON.stringify(results));
+      } catch (e) {}
+
+      // Refresh board with live PokéAPI images if currently displaying Pokémon theme
+      if (currentTheme === 'pokemon' && !isGameActive && cardBoardEl && cardBoardEl.children.length > 0) {
+        initGameBoard();
+      }
+    }
+    return results;
+  } catch (err) {
+    console.warn('PokéAPI fetch error:', err);
+  }
+}
+
+/**
+ * ----------------------------------------------------------------------------
  * 4. Game Initialization & Dynamic Board Generator
  * ----------------------------------------------------------------------------
  */
@@ -412,13 +518,17 @@ function createCardElement(card) {
   btn.setAttribute('tabindex', '0');
   btn.setAttribute('aria-label', 'Mystery Card: Face Down');
 
+  const visualContent = card.image
+    ? `<img src="${card.image}" alt="${card.label}" class="card__img" loading="lazy" />`
+    : `<span class="card__icon-text">${card.icon || ''}</span>`;
+
   btn.innerHTML = `
     <div class="card__inner">
       <div class="card__face card__face--back">
         <span class="card__back-emblem" aria-hidden="true">🃏</span>
       </div>
       <div class="card__face card__face--front">
-        <span class="card__icon" aria-hidden="true">${card.icon}</span>
+        <span class="card__icon" aria-hidden="true">${visualContent}</span>
         <span class="card__label">${card.label}</span>
         ${card.badge ? `<span class="card__badge">${card.badge}</span>` : ''}
       </div>
@@ -734,6 +844,9 @@ function bindEventListeners() {
       currentTheme = e.target.value;
       if (typeof setSelectedTheme === 'function') {
         setSelectedTheme(currentTheme);
+      }
+      if (currentTheme === 'pokemon') {
+        fetchPokemonFromPokeAPI();
       }
       initGame();
     });

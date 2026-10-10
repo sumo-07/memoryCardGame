@@ -286,102 +286,19 @@ const SoundEffects = (function () {
  * ----------------------------------------------------------------------------
  * 4. showToast(message, type, duration)
  * ----------------------------------------------------------------------------
- * Displays an accessible, animated notification toast anchored to the screen
- * using existing CSS classes (.toast-container, .toast, .toast--active, etc.).
+ * Side toast notifications have been disabled as per user request.
+ * Returns a stub with .dismiss() for backward compatibility.
  *
  * @param {string} message - Notification text to display.
  * @param {'info'|'success'|'danger'|'warning'|'error'} [type='info'] - Toast category.
  * @param {number} [duration=3000] - Duration in ms before auto-dismissal.
- * @returns {HTMLElement} The created toast element with a .dismiss() method.
+ * @returns {object} Object with a mock .dismiss() method.
  */
 function showToast(message, type = 'info', duration = 3000) {
-  if (typeof document === 'undefined') return null;
-
-  // Normalize type
-  const normalizedType = type === 'error' ? 'danger' : type;
-
-  // Ensure toast container exists
-  let container = document.querySelector('.toast-container');
-  if (!container) {
-    container = document.createElement('div');
-    container.className = 'toast-container';
-    container.setAttribute('aria-live', 'polite');
-    container.setAttribute('aria-atomic', 'true');
-    document.body.appendChild(container);
-  }
-
-  // Type-specific icons
-  const iconMap = {
-    success: '✅',
-    danger: '❌',
-    warning: '⚠️',
-    info: 'ℹ️'
+  // Side notifications disabled
+  return {
+    dismiss: () => {}
   };
-  const icon = iconMap[normalizedType] || 'ℹ️';
-
-  // Create toast element
-  const toast = document.createElement('div');
-  toast.className = `toast toast--${normalizedType}`;
-  toast.setAttribute('role', 'status');
-
-  // Build toast inner markup
-  const iconSpan = document.createElement('span');
-  iconSpan.className = 'toast__icon';
-  iconSpan.setAttribute('aria-hidden', 'true');
-  iconSpan.textContent = icon;
-
-  const msgSpan = document.createElement('span');
-  msgSpan.className = 'toast__message';
-  msgSpan.textContent = message;
-
-  toast.appendChild(iconSpan);
-  toast.appendChild(msgSpan);
-
-  container.appendChild(toast);
-
-  // Trigger entrance transition via .toast--active
-  requestAnimationFrame(() => {
-    toast.classList.add('toast--active');
-  });
-
-  let dismissTimeout = null;
-
-  const dismiss = () => {
-    if (dismissTimeout) {
-      clearTimeout(dismissTimeout);
-      dismissTimeout = null;
-    }
-
-    toast.classList.remove('toast--active');
-
-    // Remove from DOM once fade-out transition completes
-    const handleTransitionEnd = () => {
-      toast.removeEventListener('transitionend', handleTransitionEnd);
-      if (toast.parentNode) {
-        toast.parentNode.removeChild(toast);
-      }
-    };
-
-    toast.addEventListener('transitionend', handleTransitionEnd);
-
-    // Fallback safety timeout in case transitions are disabled
-    setTimeout(() => {
-      if (toast.parentNode) {
-        toast.parentNode.removeChild(toast);
-      }
-    }, 350);
-  };
-
-  // Auto dismiss after specified duration
-  if (duration > 0) {
-    dismissTimeout = setTimeout(dismiss, duration);
-  }
-
-  // Allow clicking toast to dismiss immediately
-  toast.addEventListener('click', dismiss);
-
-  toast.dismiss = dismiss;
-  return toast;
 }
 
 /**

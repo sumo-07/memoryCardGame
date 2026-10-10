@@ -447,58 +447,15 @@ body.dark-theme .badge--danger {
 }
 
 /* --------------------------------------------------------------------------
-   Toast Notifications
+/* --------------------------------------------------------------------------
+   Toast Notifications (Disabled)
    -------------------------------------------------------------------------- */
-.toast-container {
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  z-index: 2000;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  pointer-events: none;
-}
-
+.toast-container,
 .toast {
-  pointer-events: auto;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.85rem 1.25rem;
-  border-radius: var(--radius-md);
-  background-color: var(--bg-surface-elevated);
-  color: var(--text-main);
-  box-shadow: var(--shadow-lg);
-  border: 1px solid var(--border-subtle);
-  font-size: 0.925rem;
-  font-weight: 600;
-  transform: translateY(20px);
-  opacity: 0;
-  visibility: hidden;
-  transition: transform var(--transition-fast), opacity var(--transition-fast), visibility var(--transition-fast);
-}
-
-.toast.toast--active {
-  transform: translateY(0);
-  opacity: 1;
-  visibility: visible;
-}
-
-.toast--success {
-  border-left: 4px solid var(--success);
-}
-
-.toast--danger {
-  border-left: 4px solid var(--danger);
-}
-
-.toast--info {
-  border-left: 4px solid var(--primary);
-}
-
-.toast--warning {
-  border-left: 4px solid var(--warning);
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
 }
 
 /* --------------------------------------------------------------------------

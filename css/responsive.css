@@ -372,17 +372,10 @@ body {
     width: 100%;
   }
 
-  /* Toast Notifications on Mobile */
-  .toast-container {
-    left: 1rem;
-    right: 1rem;
-    bottom: 1rem;
-  }
-
+  /* Toast Notifications (Disabled) */
+  .toast-container,
   .toast {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    font-size: 0.85rem;
+    display: none !important;
   }
 
   /* Footer adjustments */
