@@ -1,7 +1,6 @@
 /**
  * ============================================================================
  * APP.JS - Global Application Controller
- * Memory Match Application - Day 3
  * ============================================================================
  * Handles global page lifecycle tasks across all templates (Game Arena,
  * Dashboard, and Settings):

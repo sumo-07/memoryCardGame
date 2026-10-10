@@ -1,7 +1,6 @@
 /**
  * ============================================================================
  * INDEXEDDB.JS - Structured Database Storage (MemoryMatchDB)
- * Memory Match Application - Day 4
  * ============================================================================
  * Implements client-side database persistence using IndexedDB:
  * - Object store 'cardSets': Custom user-created card decks (Full CRUD)

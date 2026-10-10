@@ -1,7 +1,6 @@
 /**
  * ============================================================================
  * GAME.JS - Memory Match Game Engine & Card Logic (Complete: Parts 1 & 2)
- * Memory Match Application - Day 4
  * ============================================================================
  * Features:
  * - Predefined card sets (Featured Pokémon theme + Animals, Food, Programming, Space)

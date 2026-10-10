@@ -1,7 +1,6 @@
 /**
  * ============================================================================
  * STORAGE.JS - Client Storage Layer: Cookies & HTML5 localStorage Management
- * Memory Match Application - Day 3
  * ============================================================================
  */
 

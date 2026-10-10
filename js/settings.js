@@ -1,7 +1,6 @@
 /**
  * ============================================================================
  * SETTINGS.JS - Player Identity & Application Preferences Controller
- * Memory Match Application - Day 5
  * ============================================================================
  * Features:
  * - Cookie-backed Player Identity management (form validation & greeting updates)

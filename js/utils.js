@@ -1,7 +1,6 @@
 /**
  * ============================================================================
  * UTILS.JS - Core Utility Helpers & Zero-Dependency Web Audio Synthesizer
- * Memory Match Application - Day 2
  * ============================================================================
  */
 

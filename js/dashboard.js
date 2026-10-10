@@ -1,7 +1,6 @@
 /**
  * ============================================================================
  * DASHBOARD.JS - Performance Analytics & Custom Card Set CRUD Controller
- * Memory Match Application - Day 5
  * ============================================================================
  * Features:
  * - Computes and renders 6 core game statistics from IndexedDB
