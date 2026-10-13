@@ -58,22 +58,22 @@
     </section>
 
     <div class="settings-grid">
-      <!-- 1. Player Profile Section (Stored in Cookies) -->
+      <!-- 1. Player Profile Section -->
       <section class="settings-section" aria-label="Player Identity Settings">
         <header class="settings-section__header">
           <h2 class="settings-section__title">👤 Player Identity</h2>
-          <p class="settings-section__subtitle">Stored securely inside browser cookies with last-visit timestamps.</p>
+          <p class="settings-section__subtitle">Personalize your trainer name and player alias.</p>
         </header>
 
         <form id="profileForm" novalidate>
           <div class="form-group" id="groupPlayerName">
             <label for="playerNameInput" class="form-label">
               <span>Player Name / Trainer Alias</span>
-              <span class="badge badge--primary">Cookie Stored</span>
+              <span class="badge badge--primary">Active Profile</span>
             </label>
             <input type="text" id="playerNameInput" class="form-input" placeholder="Enter your player name" maxlength="20" required>
             <div class="form-error" id="errorPlayerName">Player name must be between 2 and 20 characters.</div>
-            <p class="form-helper">This name is read via JavaScript cookies and displayed across your game arena.</p>
+            <p class="form-helper">This name is displayed across the game arena and victory screens.</p>
           </div>
 
           <div class="settings-actions-bar">
@@ -85,11 +85,11 @@
         </form>
       </section>
 
-      <!-- 2. Gameplay & Visual Preferences (Stored in localStorage) -->
+      <!-- 2. Gameplay & Visual Preferences -->
       <section class="settings-section" aria-label="Gameplay Settings">
         <header class="settings-section__header">
           <h2 class="settings-section__title">🎮 Game Preferences</h2>
-          <p class="settings-section__subtitle">Persisted across sessions via HTML5 localStorage.</p>
+          <p class="settings-section__subtitle">Customize your default game difficulty and visual preferences.</p>
         </header>
 
         <form id="preferencesForm">
@@ -174,20 +174,20 @@
         </form>
       </section>
 
-      <!-- 3. Danger Zone / Database Management -->
-      <section class="settings-section" aria-label="Database Management">
+      <!-- 3. Danger Zone / Data Management -->
+      <section class="settings-section" aria-label="Data Management">
         <header class="settings-section__header">
-          <h2 class="settings-section__title text-danger">⚠️ Database & Storage Management</h2>
-          <p class="settings-section__subtitle">Manage IndexedDB database and local application state.</p>
+          <h2 class="settings-section__title text-danger">⚠️ Data & Progress Reset</h2>
+          <p class="settings-section__subtitle">Manage saved match records and application data.</p>
         </header>
 
         <div class="setting-row">
           <div class="setting-row__info">
             <div class="setting-row__label">Reset Application Data</div>
-            <p class="setting-row__desc">Clears all game history and custom card sets from IndexedDB.</p>
+            <p class="setting-row__desc">Clears all saved match history and custom card sets.</p>
           </div>
           <button id="clearAllDataBtn" class="btn btn--danger-outline" type="button">
-            🗑️ Clear Database
+            🗑️ Clear All Data
           </button>
         </div>
       </section>
@@ -206,9 +206,9 @@
       <div class="modal__body">
         <p>This will completely clear:</p>
         <ul>
-          <li>All saved match history from IndexedDB</li>
+          <li>All saved match history and records</li>
           <li>All user-created custom card sets</li>
-          <li>Reset localStorage preferences to defaults</li>
+          <li>Reset all preferences and settings to defaults</li>
         </ul>
         <p class="text-danger font-bold mt-2">This action is irreversible!</p>
       </div>

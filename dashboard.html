@@ -174,7 +174,7 @@
         <div class="panel__header">
           <div>
             <h2 class="panel__title">🎨 Custom Card Sets</h2>
-            <p class="text-muted">Create, edit, delete, and play your own themed memory cards stored in IndexedDB.</p>
+            <p class="text-muted">Create, edit, delete, and play your own custom themed memory cards.</p>
           </div>
           <button id="openCreateSetModalBtn" class="btn btn--primary" type="button">
             ➕ Create Card Set
@@ -188,13 +188,13 @@
       </div>
     </section>
 
-    <!-- 4. Game History Table (IndexedDB Records) -->
+    <!-- 4. Game History Table (Match Records) -->
     <section class="history-section" aria-label="Match History Records">
       <div class="panel">
         <div class="panel__header">
           <div>
             <h2 class="panel__title">📜 Match History Logs</h2>
-            <p class="text-muted">Chronological game results retrieved from IndexedDB.</p>
+            <p class="text-muted">Chronological match results from your gameplay history.</p>
           </div>
           <button id="clearHistoryBtn" class="btn btn--outline btn--sm" type="button">
             🗑️ Clear History
@@ -285,7 +285,7 @@
       </header>
       <div class="modal__body">
         <p>Are you sure you want to permanently delete <strong id="deleteTargetName">this card set</strong>?</p>
-        <p class="text-muted">This action will remove the set from IndexedDB and cannot be undone.</p>
+        <p class="text-muted">This action cannot be undone.</p>
       </div>
       <footer class="modal__footer">
         <button id="cancelDeleteBtn" class="btn btn--outline" type="button">Cancel</button>
